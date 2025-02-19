@@ -1,21 +1,20 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian';
-import { DEFAULT_SETTINGS, NotesSettingTab, NotesSettings } from './settings/settings';
+import { DEFAULT_SETTINGS, NotesSettingTab, NotesSettings } from 'settings/settings';
 import { NOTES_TOOLBAR_VIEW, NotesToolbarView } from './ui/views/NotesToolbarView';
 
 export default class NotesPlugin extends Plugin {
 	settings: NotesSettings;
+	view: NotesToolbarView;
 
 	async onload() {
 		await this.loadSettings();
 
-		console.log(this.settings, DEFAULT_SETTINGS)
-
-		this.addSettingTab(new NotesSettingTab(this.app, this));
-
 		this.registerView(
 			NOTES_TOOLBAR_VIEW,
-			(leaf) => new NotesToolbarView(leaf, this.settings, this)
+			(leaf) => (this.view = new NotesToolbarView(leaf, this))
 		);
+
+		this.addSettingTab(new NotesSettingTab(this.app, this));
 
 		this.addCommand({
 			id: 'open-my-view',
