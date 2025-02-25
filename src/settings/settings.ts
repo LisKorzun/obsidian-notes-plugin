@@ -1,7 +1,6 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, normalizePath, PluginSettingTab, Setting } from 'obsidian';
 import NotesPlugin from 'main';
 import { FolderSuggest } from './suggesters/FolderSuggester';
-import { NotesToolbarView } from '../ui/views/NotesToolbarView';
 
 
 export interface NotesSettings {
@@ -13,12 +12,11 @@ export interface NotesSettings {
 export const DEFAULT_SETTINGS: Partial<NotesSettings> = {
 	demoSetup: false,
 	noteTemplate: 'tech/templates/notes/note.md',
-	notesFolder: 'data/notes/',
+	notesFolder: '',
 }
 
 export class NotesSettingTab extends PluginSettingTab {
 	plugin: NotesPlugin;
-	view: NotesToolbarView;
 
 	constructor(app: App, plugin: NotesPlugin) {
 		super(app, plugin);
@@ -38,9 +36,17 @@ export class NotesSettingTab extends PluginSettingTab {
 	}
 
 	private switchDemoSetupSetting(containerEl: HTMLElement) {
+		const desc = document.createDocumentFragment();
+		desc.append(
+			'Create all necessary folders and templates.',
+			desc.createEl('br'),
+			'Get acquainted with main functionality.',
+			desc.createEl('br'),
+			'Become guru of notes creating.'
+		);
 		new Setting(containerEl)
 			.setName('Demo Setup')
-			.setDesc('Create all necessary folders and templates. Get acquainted with main functionality. Became guru of notes creating.')
+			.setDesc(desc)
 			.addToggle(toggle => toggle
 				.setValue(this.plugin.settings.demoSetup)
 				.onChange(async (value) => {
@@ -50,6 +56,9 @@ export class NotesSettingTab extends PluginSettingTab {
 						this.plugin.view.updateView();
 					}
 				}));
+
+
+
 	}
 
 	private addNotesFolderSetting(containerEl: HTMLElement) {
@@ -60,12 +69,8 @@ export class NotesSettingTab extends PluginSettingTab {
 				new FolderSuggest(this.app, search.inputEl);
 				search.setPlaceholder('Example: folder1/folder2')
 					.setValue(this.plugin.settings.notesFolder)
-					.onChange((new_folder) => {
-						// Trim folder and Strip ending slash if there
-						new_folder = new_folder.trim()
-						new_folder = new_folder.replace(/\/$/, '');
-
-						this.plugin.settings.notesFolder = new_folder;
+					.onChange((newFolder) => {
+						this.plugin.settings.notesFolder = normalizePath(newFolder);
 						this.plugin.saveSettings();
 					});
 				// @ts-ignore

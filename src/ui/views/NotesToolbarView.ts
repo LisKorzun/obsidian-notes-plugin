@@ -1,5 +1,6 @@
-import { Notice, ItemView, WorkspaceLeaf } from 'obsidian';
+import { ItemView, normalizePath, WorkspaceLeaf } from 'obsidian';
 import NotesPlugin from 'main';
+import { SetupNotesFolder } from 'ui/modals/Setup1NotesFolder';
 
 export const NOTES_TOOLBAR_VIEW = 'notes-toolbar-view';
 export const NOTES_TOOLBAR_VIEW_TITLE = 'Notes Toolbar View';
@@ -28,7 +29,6 @@ export class NotesToolbarView extends ItemView {
 		this.updateView();
 	}
 
-
 	async onClose() {
 		// Nothing to clean up.
 	}
@@ -45,13 +45,21 @@ export class NotesToolbarView extends ItemView {
 		} else {
 			if (!this.setupButton) {
 				this.setupButton = container.createEl('button', { text: 'Demo Setup' });
-				this.setupButton.addEventListener('click', () => {
-					new Notice('Button clicked!');
-				});
+				this.setupButton.addEventListener('click', this.onSetupClicked.bind(this));
 			} else {
 				container.appendChild(this.setupButton);
 			}
 		}
 
+	}
+
+	async onSetupClicked() {
+		new SetupNotesFolder(this.app, this.plugin.settings.notesFolder, async (path: string | null) => {
+			if (path) {
+				this.plugin.settings.notesFolder = normalizePath(path);
+				await this.plugin.saveSettings();
+			}
+
+		}).open();
 	}
 }
