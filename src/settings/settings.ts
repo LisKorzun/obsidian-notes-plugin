@@ -1,6 +1,8 @@
 import { App, normalizePath, PluginSettingTab, Setting } from 'obsidian';
 import NotesPlugin from 'main';
-import { FolderSuggest } from './suggesters/FolderSuggester';
+import { FolderSuggest } from 'ui/suggesters/FolderSuggester';
+import { FileSuggester } from '../ui/suggesters/FileSuggester';
+import { fileOrFolderExists } from '../utils';
 
 
 export interface NotesSettings {
@@ -32,6 +34,7 @@ export class NotesSettingTab extends PluginSettingTab {
 
 		this.switchDemoSetupSetting(containerEl);
 		this.addNotesFolderSetting(containerEl);
+		this.addTemplateSetting(containerEl)
 
 	}
 
@@ -63,8 +66,8 @@ export class NotesSettingTab extends PluginSettingTab {
 
 	private addNotesFolderSetting(containerEl: HTMLElement) {
 		new Setting(containerEl)
-			.setName('Template folder location')
-			.setDesc('Files in this folder will be available as templates.')
+			.setName('Notes folder location')
+			.setDesc('All notes will be stored here.')
 			.addSearch((search) => {
 				new FolderSuggest(this.app, search.inputEl);
 				search.setPlaceholder('Example: folder1/folder2')
@@ -76,5 +79,23 @@ export class NotesSettingTab extends PluginSettingTab {
 				// @ts-ignore
 				search.containerEl.addClass('notes-search');
 			});
+	}
+
+	private addTemplateSetting(containerEl: HTMLElement) {
+		new Setting(containerEl)
+			.setName('Template folder location')
+			.setDesc('This file will be used as notes template.')
+			.addSearch((search) => {
+				new FileSuggester(this.app, search.inputEl);
+				search.setPlaceholder('Example: folder/file.md')
+					.setValue(this.plugin.settings.noteTemplate)
+					.onChange(async (newFile) => {
+						this.plugin.settings.noteTemplate = normalizePath(newFile);
+						await this.plugin.saveSettings();
+					})
+				// @ts-ignore
+				search.containerEl.addClass('templater_search');
+				// search.inputEl.focus();
+			})
 	}
 }

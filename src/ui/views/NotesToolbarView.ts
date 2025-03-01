@@ -1,6 +1,7 @@
 import { ItemView, normalizePath, WorkspaceLeaf } from 'obsidian';
 import NotesPlugin from 'main';
 import { SetupNotesFolder } from 'ui/modals/Setup1NotesFolder';
+import { SetupNotesTemplate } from '../modals/Setup2NotesTemplate';
 
 export const NOTES_TOOLBAR_VIEW = 'notes-toolbar-view';
 export const NOTES_TOOLBAR_VIEW_TITLE = 'Notes Toolbar View';
@@ -54,12 +55,22 @@ export class NotesToolbarView extends ItemView {
 	}
 
 	async onSetupClicked() {
-		new SetupNotesFolder(this.app, this.plugin.settings.notesFolder, async (path: string | null) => {
-			if (path) {
-				this.plugin.settings.notesFolder = normalizePath(path);
-				await this.plugin.saveSettings();
-			}
+		new SetupNotesFolder(this.app, this.plugin.settings.notesFolder, this.onSaveFolder.bind(this)).open();
+	}
 
-		}).open();
+	async onSaveFolder(path: string | null): Promise<void> {
+		if (path) {
+			this.plugin.settings.notesFolder = normalizePath(path);
+			await this.plugin.saveSettings();
+
+			new SetupNotesTemplate(this.app, this.onSaveTemplate.bind(this)).open();
+		}
+	}
+
+	async onSaveTemplate(path: string | null): Promise<void> {
+		if (path) {
+			this.plugin.settings.noteTemplate = normalizePath(path);
+			await this.plugin.saveSettings();
+		}
 	}
 }

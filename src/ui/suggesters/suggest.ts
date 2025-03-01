@@ -1,5 +1,3 @@
-// Credits go to Liam's Periodic Notes Plugin: https://github.com/liamcain/obsidian-periodic-notes
-
 import { App, ISuggestOwner, Scope } from 'obsidian';
 import { createPopper, Instance as PopperInstance } from '@popperjs/core';
 
@@ -152,7 +150,8 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
 
         if (suggestions.length > 0) {
             this.suggest.setSuggestions(suggestions);
-            this.open(this.app.dom.appContainerEl, this.inputEl);
+            // @ts-ignore
+			this.open(this.app.dom.appContainerEl, this.inputEl);
         } else {
             this.close();
         }

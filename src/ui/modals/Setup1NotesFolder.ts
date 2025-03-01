@@ -1,6 +1,6 @@
 import { App, Modal, Setting, normalizePath } from 'obsidian';
 
-import { FolderSuggest } from 'settings/suggesters/FolderSuggester';
+import { FolderSuggest } from 'ui/suggesters/FolderSuggester';
 import { folderExists, folderHighlight, folderCreate } from 'utils';
 
 export class SetupNotesFolder extends Modal {
@@ -10,6 +10,7 @@ export class SetupNotesFolder extends Modal {
 
 	constructor(app: App, settingValue: string, private onSubmit: (path: string | null) => void) {
 		super(app);
+		this.setTitle('1. Notes Folder');
 		this.path = settingValue || 'data/notes/mess';
 		this.exists = true;
 	}
@@ -18,8 +19,6 @@ export class SetupNotesFolder extends Modal {
 		this.exists = await folderExists(this.app, this.path);
 
 		const { contentEl } = this;
-		contentEl.empty();
-		contentEl.createEl('h2', { text: '1. Notes Folder' });
 		const descHeading = document.createDocumentFragment();
 		descHeading.append(
 			'Type the path to the folder or choose the existing one.',
@@ -42,7 +41,7 @@ export class SetupNotesFolder extends Modal {
 					})
 				// @ts-ignore
 				search.containerEl.addClass('templater_search');
-				search.inputEl.focus();
+				// search.inputEl.focus();
 			})
 		searchSetting.infoEl.remove();
 

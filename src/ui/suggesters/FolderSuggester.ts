@@ -1,10 +1,8 @@
-// Credits go to Liam's Periodic Notes Plugin: https://github.com/liamcain/obsidian-periodic-notes
-
 import { App, TAbstractFile, TFolder } from 'obsidian';
 import { TextInputSuggest } from './suggest';
 
 export class FolderSuggest extends TextInputSuggest<TFolder> {
-    constructor(app: App, inputEl: HTMLInputElement | HTMLTextAreaElement) {
+    constructor(app: App, inputEl: HTMLInputElement) {
         super(app, inputEl);
     }
 
