@@ -4,6 +4,7 @@ import { folderHighlight } from './folderHighlight';
 import { wrapAround } from './wrapAround';
 import { fileOrFolderExists } from './fileOrFolderExists';
 import { fileHighlight } from './fileHighlight';
+import { fileExists } from './fileExists';
 
 export {
 	// Folder Utilities
@@ -14,5 +15,6 @@ export {
 	fileOrFolderExists,
 	// File Utilities
 	fileHighlight,
+	fileExists,
 	// Others
 	wrapAround, };

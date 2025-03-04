@@ -1,7 +1,10 @@
-import { ItemView, normalizePath, WorkspaceLeaf } from 'obsidian';
+import { ButtonComponent, ItemView, normalizePath, WorkspaceLeaf } from 'obsidian';
 import NotesPlugin from 'main';
 import { SetupNotesFolder } from 'ui/modals/Setup1NotesFolder';
 import { SetupNotesTemplate } from '../modals/Setup2NotesTemplate';
+import { NewNoteFileNameModal } from '../modals/NewNote1FileName';
+import { fileCreateFromTemplate } from '../../utils/fileCreateFromTemplate';
+import { fileHighlight } from '../../utils';
 
 export const NOTES_TOOLBAR_VIEW = 'notes-toolbar-view';
 export const NOTES_TOOLBAR_VIEW_TITLE = 'Notes Toolbar View';
@@ -10,11 +13,13 @@ export const NOTES_TOOLBAR_VIEW_TITLE = 'Notes Toolbar View';
 export class NotesToolbarView extends ItemView {
 	private plugin: NotesPlugin;
 	private setupButton: HTMLButtonElement | null;
+	private newNoteButton: ButtonComponent | null;
 
 	constructor(leaf: WorkspaceLeaf, plugin: NotesPlugin) {
 		super(leaf);
 		this.plugin = plugin;
 		this.setupButton = null;
+		this.newNoteButton = null;
 	}
 
 
@@ -51,7 +56,22 @@ export class NotesToolbarView extends ItemView {
 				container.appendChild(this.setupButton);
 			}
 		}
+		const hrEl = container.createEl('hr');
+		container.appendChild(hrEl);
 
+		this.newNoteButton = new ButtonComponent(container as HTMLElement);
+		this.newNoteButton.setButtonText('New Note').setCta().onClick(this.onNewNoteClick.bind(this));
+
+	}
+
+	async onNewNoteClick() {
+		console.log('onNewNoteClick');
+		new NewNoteFileNameModal(this.app,this.plugin.settings.notesFolder, this.onNewNoteCreate.bind(this)).open();
+	}
+	async onNewNoteCreate(name: string) {
+		console.log('created', name);
+		await fileCreateFromTemplate(this.app, name, '');
+		await fileHighlight(this.app, name);
 	}
 
 	async onSetupClicked() {

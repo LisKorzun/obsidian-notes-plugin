@@ -1,4 +1,4 @@
-import { App, Notice, TFile, Vault, normalizePath } from 'obsidian';
+import { App, TFile, normalizePath } from 'obsidian';
 import { folderCreate } from './folderCreate';
 
 export async function fileCreateFromTemplate(
