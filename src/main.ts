@@ -28,13 +28,13 @@ export default class NotesPlugin extends Plugin {
 			}
 		});
 
-		this.registerEvent(
-			this.app.workspace.on('file-open', async (file: TFile) => {
-				if (file) {
-					await buttonsLine(this.app, file);	// Add Cluster Buttons
-				}
-			}),
-		);
+		// this.registerEvent(
+		// 	this.app.workspace.on('file-open', async (file: TFile) => {
+		// 		if (file) {
+		// 			await buttonsLine(this.app, file);	// Add Cluster Buttons
+		// 		}
+		// 	}),
+		// );
 	}
 
 	onunload() {
