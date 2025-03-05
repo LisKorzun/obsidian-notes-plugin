@@ -1,6 +1,7 @@
-import { Plugin, WorkspaceLeaf } from 'obsidian';
+import { Plugin, WorkspaceLeaf, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, NotesSettingTab, NotesSettings } from 'settings/settings';
 import { NOTES_TOOLBAR_VIEW, NotesToolbarView } from './ui/views/NotesToolbarView';
+// import { buttonsLine } from './ui/actions/fileActions';
 
 export default class NotesPlugin extends Plugin {
 	settings: NotesSettings;
@@ -8,6 +9,9 @@ export default class NotesPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+
+		// const file = this.app.workspace.getActiveFile() as TFile;
+		// file ? await buttonsLine(this.app, file) : null;
 
 		this.registerView(
 			NOTES_TOOLBAR_VIEW,
@@ -23,6 +27,14 @@ export default class NotesPlugin extends Plugin {
 				this.activateView();
 			}
 		});
+
+		this.registerEvent(
+			this.app.workspace.on('file-open', async (file: TFile) => {
+				if (file) {
+					await buttonsLine(this.app, file);	// Add Cluster Buttons
+				}
+			}),
+		);
 	}
 
 	onunload() {
