@@ -1,4 +1,4 @@
-import { Plugin, WorkspaceLeaf, TFile } from 'obsidian';
+import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { DEFAULT_SETTINGS, NotesSettingTab, NotesSettings } from 'settings/settings';
 import { NOTES_TOOLBAR_VIEW, NotesToolbarView } from './ui/views/NotesToolbarView';
 // import { buttonsLine } from './ui/actions/fileActions';
