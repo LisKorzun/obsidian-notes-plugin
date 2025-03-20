@@ -14,12 +14,14 @@ export class NotesToolbarView extends ItemView {
 	private plugin: NotesPlugin;
 	private setupButton: HTMLButtonElement | null;
 	private newNoteButton: ButtonComponent | null;
+	private newFoodDiaryNoteButton: ButtonComponent | null;
 
 	constructor(leaf: WorkspaceLeaf, plugin: NotesPlugin) {
 		super(leaf);
 		this.plugin = plugin;
 		this.setupButton = null;
 		this.newNoteButton = null;
+		this.newFoodDiaryNoteButton = null;
 	}
 
 
@@ -62,12 +64,20 @@ export class NotesToolbarView extends ItemView {
 		this.newNoteButton = new ButtonComponent(container as HTMLElement);
 		this.newNoteButton.setButtonText('New Note').setCta().onClick(this.onNewNoteClick.bind(this));
 
+		this.newFoodDiaryNoteButton = new ButtonComponent(container as HTMLElement);
+		this.newFoodDiaryNoteButton.setButtonText('New Food Diary').setCta().onClick(this.onNewFoodDiaryNoteButtonClick.bind(this));
+
+	}
+
+	async onNewFoodDiaryNoteButtonClick() {
+		console.log('Food Diary Note');
 	}
 
 	async onNewNoteClick() {
 		console.log('onNewNoteClick');
-		new NewNoteFileNameModal(this.app,this.plugin.settings.notesFolder, this.onNewNoteCreate.bind(this)).open();
+		new NewNoteFileNameModal(this.app, this.plugin.settings.notesFolder, this.onNewNoteCreate.bind(this)).open();
 	}
+
 	async onNewNoteCreate(name: string) {
 		console.log('created', name);
 		await fileCreateFromTemplate(this.app, name, '');

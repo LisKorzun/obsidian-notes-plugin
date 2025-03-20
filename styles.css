@@ -15,3 +15,12 @@ If your plugin does not need CSS, delete this file.
 	font-size: 12px;
 	margin-top: -10px;
 }
+.buttonsLineContainer {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	justify-content: center;
+}
+.extraButtonsContainer {
+	display: none;
+}

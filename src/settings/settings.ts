@@ -35,14 +35,14 @@ export class NotesSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl('h2', {
-			text: 'Notes plugin',
-		});
 
+		new Setting(containerEl).setName('Hierarchical Notes').setHeading();
 		this.switchDemoSetupSetting(containerEl);
 		this.addRootFileSetting(containerEl);
 		this.addNotesFolderSetting(containerEl);
 		this.addTemplateSetting(containerEl)
+
+		new Setting(containerEl).setName('Diary Notes').setHeading();
 
 	}
 
